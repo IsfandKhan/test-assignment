@@ -1,0 +1,41 @@
+Question Code Review
+Review following code snippet and answer questions:
+1) What are the problems in this code snippet?
+2) How can we solve them?
+3) If there are multiple options to solve them, what benefits and drawbacks of each method?
+
+@Component({
+    selector: 'app-user-panel',
+    template: `<div class="user-panel">{{ getUserName() }}</button>`,
+})
+export class UserPanelComponent {
+    private _user;
+
+    constructor(private _authService: AuthService) {
+        this._authService
+            .user
+            .subscribe(user => {
+            this._user = user;
+        });
+    }
+
+    public getUserName() {
+        return this._user.name;
+    }
+}
+
+
+Answer
+
+1) a) Closing and opening tags don't match in template. They are <div></button>.
+   b) Accessing this._user.name in function getUserName() will throw an error because this._user undefined at the time when view is being initialized and function is called.
+
+2) a) making opening and closing html tags consistent, say <div class="user-panel">{{ getUserName() }}</div>
+   
+   b1) using optional chaining when accessing this._user.name like this._user?.name or adding check for this._user in function.
+   
+   b2) making this._user public, saving observable this._authService.user to this._user directly and accessing it in template via async pipe like (this._user | async)?.name
+   
+   b3) making this._user public and using structural directive *ngIf in template like <div *ngIf="this._user" class="user-panel">{{ getUserName() }}</div>
+
+3) b1 is most preferrable in this case as it requires least change in given code structure. b2 reduces code written but introduces subscribing in template which is not much readable and limits code flexibility. b2 and b3 also exposes data property to template which takes away the encapsulation and abstraction from our component, which is strength of angular components and OOP in general.

@@ -1,0 +1,17 @@
+Question Component Interaction
+Imagine that we have two components - ComponentA and ComponentB. Both
+components have to interact with each other in some way:
+- Send some data from ComponentA to ComponentB and vice versa.
+- Call some methods from ComponentA to ComponentB and vice versa.
+Given this information, please answer following questions:
+1) What options do we have to establish such communication?
+2) For each option describe what are the pros and cons of this solution?
+3) For each option describe what are the cases the solution fits best?
+
+Answer
+
+1) The data can be passed via @Input() and @Output() property or a service from ComponentA to ComponentB and vice versa. 
+
+2) If data is to be passed and received via @Input() and @Output() property and ComponentA and ComponentB don't have a direct parent child relationship then we will have to do prop drilling until we reach the component to which we need to pass data or receive data from. In case of passing/receiving data via service, we'll have to inject that service in each module or component and keep track of the state of service in case its reinitialised.
+
+3) If we have a direct parent-child or grandparent-child relation between components then @Input()/@Output() approach is better. If we want to share data across modules or among components with no direct relation then service approach is better.
